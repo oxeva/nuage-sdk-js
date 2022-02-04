@@ -1,6 +1,6 @@
 {
-  "name": "@nuage/sdk-js",
-  "version": "1.0.0",
+  "name": "@oxeva/nuage-sdk",
+  "version": "0.0.0",
   "description": "Software Development Kit (SDK) for Nua.ge",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
@@ -17,7 +17,7 @@
     "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false"
   },
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "files": [
     "dist/**"
