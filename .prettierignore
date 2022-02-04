@@ -1,0 +1,22 @@
+# System Files
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log*
+
+# PhpStorm
+.idea/
+!.idea/php.xml
+!.idea/watcherTasks.xml
+
+# Visual Studio Code
+.vscode/
+.history/
+
+##################
+# Project specific
+##################
+dist/
+coverage/
+CHANGELOG.md

@@ -1,0 +1,58 @@
+{
+    "baseUrl": "https://api.nua.ge",
+    "values": {
+        "coupon": {
+            "name": "BIENVENUE"
+        },
+        "sponsorCode": "COUPON25"
+    },
+    "payloads": {
+        "keypair": {
+            "post": {
+                "publicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDacL+fppZFFE/9+hlfLaw0gW1nxz77BtlLL7/ziJERJy3VtZhJ94Sk6xfwJKdzbaiqGPligQ1gomK8Knb9YM9u8wQT7dgmV3rsxkEKgTWbSQaW8MzdYxlg6RTzJveYlmdQ2rpoEIapw9nL6R7afm6WpnSfw2krHfLCVMZGJ94DR+eGw2fjaLvLjiPSfVH5NYtKXh54V4IxYv4WHJSaQZCN2pyqFB6xUjYoepfh/1vn5nnqQcqjLCt/BNp/prKGl4vI6fzLZny6Zc38QYkb9bKa+M0wr0EVQcVltRNRwZ1idF+AI+2LLVRNuCpBU+b5H32Tp4CTUvE9BvXrUKnG7Nxh",
+                "description": "unit-test-sdk-js-keypair-description"
+            },
+            "patch": {
+                "isDefault": true
+            }
+        },
+        "project": {
+            "post": {
+                "description": "unit-test-sdk-js-project-description"
+            },
+            "patch": {
+                "description": "unit-test-sdk-js-project-description-updated"
+            }
+        },
+        "image": {
+            "post": {
+                "name": "unit-test-sdk-js-image-name",
+                "description": "unit-test-sdk-js-image-description",
+                "osAdminUser": "unit-test-sdk-js-image-osadminuser",
+                "osName": "unit-test-sdk-js-image-osname",
+                "osVersion": "1.0.0",
+                "isPublic": false
+            },
+            "patch": {
+                "osVersion": "2.0.0"
+            }
+        },
+        "flavor": {
+            "post": {
+                "name": "unit-test-sdk-js-flavor-name",
+                "ram": 1,
+                "core": 1,
+                "disk": 100,
+                "isPublic": false
+            },
+            "patch": {
+                "disk": 200
+            }
+        },
+        "invitation": {
+            "post": {
+                "email": "invitation@example.com"
+            }
+        }
+    }
+}

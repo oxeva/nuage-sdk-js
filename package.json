@@ -1,0 +1,77 @@
+{
+  "name": "@nuage/sdk-js",
+  "version": "1.0.0",
+  "description": "Software Development Kit (SDK) for Nua.ge",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "directories": {
+    "dist": "dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:oxeva/nuage-sdk-js.git"
+  },
+  "scripts": {
+    "build": "rm -rf dist && rollup -c rollup.config.js",
+    "format": "prettier --single-quote -w '**/*.{js,md}' && npm run lint:fix",
+    "lint": "eslint ./ --ext .js --color",
+    "lint:fix": "npm run lint -- --fix",
+    "semantic-release": "semantic-release",
+    "test": "jest --watch",
+    "test:ci": "jest --config ./jest.config.js --collectCoverage --coverageDirectory=\"./coverage\" --ci --reporters=default --reporters=jest-junit --watchAll=false"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "files": [
+    "dist/**"
+  ],
+  "keywords": [],
+  "author": "Oxeva <dev@oxeva.fr>",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/eslint-parser": "^7.16.0",
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@types/jest": "^27.0.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "dotenv": "^10.0.0",
+    "eslint": "^8.1.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jest": "^25.3.0",
+    "jest": "^27.3.1",
+    "jest-extended": "^1.1.0",
+    "jest-fetch-mock": "^3.0.3",
+    "jest-junit": "^13.0.0",
+    "marked": "^4.0.12",
+    "pactum": "^3.1.0",
+    "prettier": "^2.4.1",
+    "rollup": "^2.60.0",
+    "rollup-plugin-node-externals": "^2.2.0"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.16.0",
+    "eventsource": "^1.1.0",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "peerDependencies": {
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "util": "^0.12.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
