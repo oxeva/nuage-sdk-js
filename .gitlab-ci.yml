@@ -1,0 +1,62 @@
+default:
+  image: node:14-alpine
+  before_script:
+    - apk add git ca-certificates
+    - npm ci --cache .npm --prefer-offline
+    - npm config set -- '@oxeva:registry' "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/"
+    - npm config set -- "${CI_API_V4_URL#https}/projects/${CI_PROJECT_ID}/packages/npm/:_authToken" "${CI_JOB_TOKEN}"
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .npm/
+
+variables:
+  NPM_TOKEN: ${CI_JOB_TOKEN}
+  GITLAB_TOKEN: ${CI_JOB_TOKEN}
+
+stages:
+  - lint
+  - test
+  - build
+  - deploy
+
+.tests:
+  dependencies: []
+  only:
+    - branches
+
+linter_js:
+  extends: .tests
+  stage: lint
+  script:
+    - npm run lint
+
+test:
+  extends: .tests
+  stage: test
+  script:
+#    - mkdir -p ${CI_PROJECT_DIR}${CI_PROJECT_DIR}.tmp && cp -p $TEST_CONFIG_FILE ${CI_PROJECT_DIR}${TEST_CONFIG_FILE}
+    - npm run test:ci
+  artifacts:
+    reports:
+      junit: junit.xml
+      cobertura: coverage/cobertura-coverage.xml
+
+build:
+  stage: build
+  script:
+    - npm run build
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  artifacts:
+    paths:
+      - dist/
+
+release:
+  stage: deploy
+  dependencies:
+    - build
+  script:
+    - npx semantic-release
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
