@@ -7,10 +7,6 @@
   "directories": {
     "dist": "dist"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:oxeva/nuage-sdk-js.git"
-  },
   "scripts": {
     "build": "rm -rf dist && rollup -c rollup.config.js",
     "format": "prettier --single-quote -w '**/*.{js,md}' && npm run lint:fix",
@@ -40,6 +36,9 @@
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.0.6",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/gitlab": "^7.0.4",
     "@types/jest": "^27.0.2",
     "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^10.0.0",
@@ -55,7 +54,8 @@
     "pactum": "^3.1.0",
     "prettier": "^2.4.1",
     "rollup": "^2.60.0",
-    "rollup-plugin-node-externals": "^2.2.0"
+    "rollup-plugin-node-externals": "^2.2.0",
+    "semantic-release": "^19.0.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.16.0",
