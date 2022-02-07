@@ -10,7 +10,29 @@
             }
         ],
         "@semantic-release/changelog",
-        "@semantic-release/gitlab",
-        "@semantic-release/npm"
+        [
+            "@semantic-release/git",
+            {
+                "assets": ["CHANGELOG.md", "package.json"]
+            }
+        ],
+        [
+            "@semantic-release/gitlab",
+            {
+                "assets":
+                [   
+                    {"path": ["dist/**", "package.json", "README.md", "CHANGELOG.md"], "type": "package", "label": "NPM package"}
+                ]
+            }
+        ],
+        [
+            "@amanda-mitchell/semantic-release-npm-multiple",
+            {
+                "registries": {
+                    "gitlab": {},
+                    "npmjs": {}
+                }
+            }
+        ]
     ]
 }
