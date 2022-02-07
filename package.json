@@ -26,6 +26,7 @@
   "author": "Oxeva <dev@oxeva.fr>",
   "license": "UNLICENSED",
   "devDependencies": {
+    "@amanda-mitchell/semantic-release-npm-multiple": "^2.17.0",
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.16.0",
     "@babel/plugin-proposal-class-properties": "^7.16.0",
