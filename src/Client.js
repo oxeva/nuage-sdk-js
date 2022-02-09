@@ -133,6 +133,17 @@ export default class Client {
     }
 
     /**
+     * Capture an unpaid invoice
+     */
+    captureInvoice(filters) {
+        Logger.debug('Client.captureInvoice()', { filters });
+
+        return this.#controllers
+            .use('invoice')
+            .captureInvoice(filters);
+    }
+
+    /**
      * Retrieve a contract
      */
     contract(filters) {
