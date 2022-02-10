@@ -27,6 +27,10 @@ export default class Client {
             Request.percentageError = config.percentageError;
         }
 
+        if (config.onRefreshTokenChange) {
+            Request.onRefreshTokenChange = config.onRefreshTokenChange;
+        }
+
         Logger.debug('Client.config()', { config });
 
         return this;
@@ -36,8 +40,7 @@ export default class Client {
      * Get current token
      */
     getToken(callback) {
-        setTimeout(callback, 1000, Request.refreshToken);
-
+        callback(Request.refreshToken);
         return this;
     }
 

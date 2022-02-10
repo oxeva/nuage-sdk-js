@@ -25,6 +25,11 @@ export default class Request {
     static refreshToken;
 
     /**
+     * Current refresh token of customer
+     */
+    static onRefreshTokenChange() {}
+
+    /**
      * Current event token
      */
     static eventToken;
@@ -95,6 +100,7 @@ export default class Request {
 
         this.token = response.token;
         this.refreshToken = response.refresh_token;
+        this.onRefreshTokenChange(response.refresh_token);
 
         Logger.info(
             `Your token has been refreshed. This is your new refresh token:\n${this.refreshToken}`,

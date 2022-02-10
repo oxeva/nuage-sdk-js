@@ -41,6 +41,7 @@ export default class AuthController extends Controller {
 
         this.Request.token = response.token;
         this.Request.refreshToken = response.refresh_token;
+        this.Request.onRefreshTokenChange(response.refresh_token);
     }
 
     login(credential = {}) {
