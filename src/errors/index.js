@@ -6,6 +6,7 @@ import * as AccessForbidden from './accessForbidden';
 import * as NotFound from './notFound';
 import * as Unprocessable from './unprocessable';
 import * as Disabled from './disabled';
+import * as Custom from './custom';
 
 export default {
     NuageError,
@@ -16,4 +17,5 @@ export default {
     ...NotFound,
     ...Unprocessable,
     ...Disabled,
+    ...Custom,
 };
