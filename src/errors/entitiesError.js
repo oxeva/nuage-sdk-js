@@ -50,18 +50,18 @@ export const invitationCustomErrors = {
     ...customErrors,
     400: CustomErrors.InvitationSyntaxError,
     401: CustomErrors.InvitationAccessForbidden,
-    402: CustomErrors.InvoiceNotFullyPaid,
     403: CustomErrors.InvitationAccessForbidden,
     404: CustomErrors.InvitationNotFound,
-    409: CustomErrors.InvoiceUncollectible,
     422: CustomErrors.InvitationUnprocessable,
 };
 export const invoiceCustomErrors = {
     ...customErrors,
     400: CustomErrors.InvoiceSyntaxError,
     401: CustomErrors.InvoiceAccessForbidden,
+    402: CustomErrors.InvoiceNotFullyPaid,
     403: CustomErrors.InvoiceAccessForbidden,
     404: CustomErrors.InvoiceNotFound,
+    409: CustomErrors.InvoiceUncollectible,
     422: CustomErrors.InvoiceUnprocessable,
 };
 
