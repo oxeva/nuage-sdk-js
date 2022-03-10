@@ -110,7 +110,7 @@ export default class Client {
      * Unsubscribe all mercure events
      */
     unsubscribe() {
-        EventSource.unsubscribe();
+        EventSource.unsubscribe({ resetSubscriptions: true });
 
         return this;
     }
