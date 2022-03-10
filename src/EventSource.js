@@ -21,6 +21,9 @@ export default class EventSource {
     // CurrentEnventSource Stream
     static stream;
 
+    // List of active subscription topics and callbacks.
+    static subscriptions = [];
+
     // Is a subscription in progress
     static isOpen = false;
 
@@ -55,15 +58,16 @@ export default class EventSource {
     /**
      * Allows us to generate a new Mercure token
      */
-    static async login(url, callback) {
-        Logger.debug('EventSource.login()', { url, callback });
+    static async login(url) {
+        Logger.debug('EventSource.login()', { url });
 
-        this.logout();
+        this.unsubscribe({ resetSubscriptions: false });
+        this.lastEventId = null;
 
         const { response } = await Request.get(URL_TOKEN_EVENT);
         Request.eventToken = response?.token;
 
-        this.subscribe(url, callback);
+        this.subscribe(url);
     }
 
     /**
@@ -72,7 +76,7 @@ export default class EventSource {
     static logout() {
         Logger.debug('EventSource.logout()');
 
-        this.unsubscribe();
+        this.unsubscribe({ resetSubscriptions: true });
         Request.eventToken = undefined;
         this.lastEventId = null;
     }
@@ -80,10 +84,14 @@ export default class EventSource {
     /**
      * Closes the subscription
      */
-    static unsubscribe() {
-        Logger.debug('EventSource.unsubscribe()');
+    static unsubscribe({ resetSubscriptions }) {
+        Logger.debug('EventSource.unsubscribe()', { resetSubscriptions });
 
         this.isOpen = false;
+
+        if (resetSubscriptions) {
+            this.subscriptions = [];
+        }
 
         if (!this.stream) {
             return;
@@ -102,7 +110,7 @@ export default class EventSource {
     static offlineListener() {
         Logger.debug('EventSource.offlineListener()');
 
-        this.unsubscribe();
+        this.unsubscribe({ resetSubscriptions: false });
 
         window.removeEventListener('offline', this.offlineListener);
     }
@@ -110,10 +118,10 @@ export default class EventSource {
     /**
      * Resume the subscription when the internet network is restored
      */
-    static onlineListener(url, callback) {
-        Logger.debug('EventSource.onlineListener()', { url, callback });
+    static onlineListener(url) {
+        Logger.debug('EventSource.onlineListener()', { url });
 
-        this.subscribe(url, callback);
+        this.subscribe(url);
 
         window.removeEventListener('online', this.onlineListener);
     }
@@ -121,15 +129,15 @@ export default class EventSource {
     /**
      * Performed when opening a new EventSource
      */
-    static onOpen(url, callback) {
-        Logger.debug('EventSource.onOpen()', { url, callback });
+    static onOpen(url) {
+        Logger.debug('EventSource.onOpen()', { url });
 
         window.addEventListener('offline', () => {
             this.offlineListener();
         });
 
         window.addEventListener('online', () => {
-            this.onlineListener(url, callback);
+            this.onlineListener(url);
         });
 
         window.addEventListener('beforeunload', () => {
@@ -140,10 +148,10 @@ export default class EventSource {
     /**
      * Performed when connection to the EventSource is lost
      */
-    static onError({ event, url, callback }) {
-        Logger.debug('EventSource.onError()', { event, url, callback });
+    static onError({ event, url }) {
+        Logger.debug('EventSource.onError()', { event, url });
 
-        this.unsubscribe();
+        this.unsubscribe({ resetSubscriptions: false });
 
         // Don't try to reconnect when already connected,
         // reloading page, access forbidden, or offline.
@@ -160,18 +168,19 @@ export default class EventSource {
             'Connection to retrieve data in real-time lost. Trying to reconnect.',
         );
 
-        this.subscribe(url, callback);
+        this.subscribe(url);
     }
 
     /**
      * Format data to retrieve entity assumed
      */
-    static async formatData({ event = {}, url = '', callback = () => {} }) {
-        Logger.debug('EventSource.formatData()', { event, url, callback });
+    static async formatData({ event = {}, url = '' }) {
+        Logger.debug('EventSource.formatData()', { event, url });
 
         // Retrieve type of the entity
         let entityName = event?.['@type'];
         const id = event?.['@id'];
+        const topic = event?.['@id'];
 
         if (!entityName) {
             this.entitiesSubscriptionList.forEach((entityInfo) => {
@@ -192,7 +201,7 @@ export default class EventSource {
         }
 
         if (entityName === 'Project') {
-            await this.login(url, callback);
+            await this.login(url);
         }
 
         const entity = new Entity({ ...event, id });
@@ -211,23 +220,89 @@ export default class EventSource {
 
         Logger.notice(`New event received from ${entityName}`, entity);
 
-        return entity;
+        return { topic, data: entity };
+    }
+
+    /**
+     * Adds a new callback to be executed when we have a matching topic.
+     */
+    static subscribeToTopic({ topic, key, callback }) {
+        Logger.debug('EventSource.subscribeToTopic()', {
+            topic,
+            key,
+            callback,
+        });
+
+        const alreadyExists = this.subscriptions.find(
+            (subscription) => subscription.callback.toString() === callback.toString()
+                && subscription.topic === topic,
+        );
+
+        if (!alreadyExists) {
+            this.subscriptions.push({ topic, key, callback });
+            Logger.debug(`Added new subscription for ${topic}`);
+        } else {
+            Logger.debug(
+                `Topic subscription for ${topic} already exists with identical callback`,
+            );
+        }
+    }
+
+    /**
+     * Removes an active subscription.
+     */
+    static unsubscribeFromTopic({ key }) {
+        Logger.debug('EventSource.unsubscribeFromTopic()', { key });
+
+        const index = this.subscriptions.findIndex(
+            (subscription) => subscription.key === key,
+        );
+
+        if (index > -1) {
+            Logger.debug(
+                `Unsubscribed from topic: ${this.subscriptions[index].topic}`,
+            );
+            this.subscriptions.splice(index, 1);
+        } else {
+            Logger.debug(
+                `Failed to unsubscribe from topic subscription, updateKey: ${key} was not found`,
+            );
+        }
+    }
+
+    /**
+     * Dispatches events to callbacks in subscriptions array matching the topic.
+     */
+    static dispatchEvent({ eventData, eventTopic }) {
+        Logger.debug('EventSource.dispatchEvent()', { eventData, eventTopic });
+
+        this.subscriptions.map((subscription) => {
+            try {
+                if (eventTopic.includes(subscription.topic)) {
+                    subscription.callback(false, eventData);
+                }
+            } catch (error) {
+                Logger.error('Error occurred in the callback event', error);
+            }
+            return this;
+        });
     }
 
     /**
      * Performed when an event is retrieved
      */
-    static onMessage({ event, url, callback }) {
+    static onMessage({ event, url }) {
+        Logger.debug('EventSource.onMessage()', { event, url });
+
         this.formatData({
             event: JSON.parse(event.data),
             url,
-            callback,
-        }).then((data) => {
+        }).then(({ topic, data }) => {
             this.lastEventId = event.lastEventId;
 
             try {
                 if (this.isOpen) {
-                    callback(false, data);
+                    this.dispatchEvent({ eventData: data, eventTopic: topic });
                 }
             } catch (error) {
                 Logger.error('Error occurred in the callback event', error);
@@ -236,14 +311,11 @@ export default class EventSource {
     }
 
     /**
-     * Open the subscription connection
+     * Open the events connection.
+     * We only keep one incoming stream of data and then dispatch it to active subscriptions.
      */
-    static subscribe(hubUrl, callback) {
-        Logger.debug('EventSource.subscribe()', { hubUrl, callback });
-
-        if (typeof callback !== 'function') {
-            return;
-        }
+    static subscribe(hubUrl) {
+        Logger.debug('EventSource.subscribe()', { hubUrl });
 
         // Should be string but the onError() method return an object when retrying...
         let formattedHubUrl = hubUrl;
@@ -259,7 +331,7 @@ export default class EventSource {
         }
 
         if (this.stream) {
-            this.unsubscribe();
+            this.unsubscribe({ resetSubscriptions: false });
         }
 
         // Create the connection with authentication
@@ -275,8 +347,8 @@ export default class EventSource {
 
         this.isOpen = true;
 
-        this.stream.onopen = () => this.onOpen(url, callback);
-        this.stream.onerror = (event) => this.onError({ event, url, callback });
-        this.stream.onmessage = (event) => this.onMessage({ event, url, callback });
+        this.stream.onopen = () => this.onOpen(url);
+        this.stream.onerror = (event) => this.onError({ event, url });
+        this.stream.onmessage = (event) => this.onMessage({ event, url });
     }
 }

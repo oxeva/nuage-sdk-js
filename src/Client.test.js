@@ -17,6 +17,7 @@ import VARS from '../tests/variables';
 import Client from './Client';
 import EventSource from './EventSource';
 import Request from './Request';
+import ControllerFactory from './utils/ControllerFactory';
 import EntityFactory from './utils/EntityFactory';
 import Logger from './utils/Logger';
 import {
@@ -461,6 +462,72 @@ it('Client.auth()', async () => {
             expect(Request.refreshToken).toBeDefined();
             expect(oldRefToken).not.toStrictEqual(Request.refreshToken);
         });
+});
+
+it('Client onUpdate()', async () => {
+    const eventPayload = {
+        '@context': '/rockefeller/contexts/Server',
+        '@id': '/rockefeller/servers/84c0d5e6-be1f-47d7-9ada-f58d5bbe812d',
+        '@type': 'Server',
+        id: '84c0d5e6-be1f-47d7-9ada-f58d5bbe812d',
+        name: 'instance-2022-03-09-11-06-49',
+        description: 'instance-2022-03-09-11-06-49',
+        status: 'off',
+        state: 'on',
+        project: '/arya/projects/17e98923-6280-4bed-854b-50e58eec993d',
+        securityGroups: [],
+    };
+
+    const resultEntity = {
+        id: '84c0d5e6-be1f-47d7-9ada-f58d5bbe812d',
+        description: 'instance-2022-03-09-11-06-49',
+        name: 'instance-2022-03-09-11-06-49',
+        project: '17e98923-6280-4bed-854b-50e58eec993d',
+        state: 'on',
+        status: 'off',
+    };
+
+    EventSource.isOpen = true;
+
+    const spy = jest.spyOn(client, 'servers').mockImplementation(() => {
+        client.topicUrl = URL_SERVERS;
+        return ControllerFactory.use('server');
+    });
+
+    const mockHubUrl = 'https://mock.test/hub-url';
+
+    const firstServersRef = client.servers();
+
+    firstServersRef.onUpdate((error, data) => {
+        expect(error).toBeFalse();
+        expect(data).toEqual(resultEntity);
+    });
+
+    const secondServersRef = client.servers();
+
+    secondServersRef.onUpdate((error, data) => {
+        if (error) {
+            return;
+        }
+        expect(data).toEqual(resultEntity);
+    });
+
+    EventSource.onMessage({
+        event: { data: JSON.stringify(eventPayload) },
+        url: mockHubUrl,
+    });
+
+    expect(EventSource.subscriptions).toBeArrayOfSize(2);
+
+    firstServersRef.unsubscribe();
+    expect(EventSource.subscriptions).toBeArrayOfSize(1);
+
+    secondServersRef.unsubscribe();
+    expect(EventSource.subscriptions).toBeArrayOfSize(0);
+
+    EventSource.unsubscribe({ resetSubscriptions: false });
+
+    spy.mockRestore();
 });
 
 it('Client.logout()', () => {

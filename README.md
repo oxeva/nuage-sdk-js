@@ -332,6 +332,8 @@ client.users({ id: ['ID1', 'ID2', 'ID3'] }).onReady((error, data) => {
 
 If an entity supports events (refer to the [table of entities](#table-of-entities)), you can subscribe to them by adding the `.onUpdate()` method, and get real-time updates.
 
+Don't forget to unsubscribe from events when you no longer need them, otherwise the callback will continue to be invoked.
+
 ```javascript
 import Nuage from '@oxeva/nuage-sdk';
 
@@ -339,14 +341,22 @@ const client = new Nuage.Client().config({
     baseUrl: 'https://api.nua.ge',
 });
 
-client
-    .servers()
+// Keep a reference to the Entity you want to query.
+const serversRef = client.servers();
+
+// Make your request.
+serversRef
     .onReady((error, data) => {
         console.log(data);
     })
     .onUpdate((updateError, updateData) => {
+        // Executes when we receive a new Server event.
         console.log(updateData);
     });
+
+// Unsubscribe when you no longer need to listen to events (ex: on component unmount or page change).
+
+serversRef.unsubscribe();
 ```
 
 ## Get an entity

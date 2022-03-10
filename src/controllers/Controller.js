@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import Logger from '../utils/Logger';
 import Request from '../Request';
 import EventSource from '../EventSource';
@@ -9,6 +10,12 @@ export default class Controller {
 
     // Should defined in child class
     url = null;
+
+    // Used to correctly dispatch events to matching event topics.
+    topicUrl = null;
+
+    // Used to correctly remove callback in EventSource.subscriptions array.
+    updateKey = null;
 
     // Should defined in child class
     #customErrors = null;
@@ -74,7 +81,7 @@ export default class Controller {
     async setMercureTokenUnlogged(id) {
         Logger.debug('Controller.setMercureTokenUnlogged()', { id });
 
-        EventSource.unsubscribe();
+        EventSource.unsubscribe({ resetSubscriptions: false });
 
         await this.Request.post(
             URL_TOKEN_EVENT,
@@ -87,7 +94,7 @@ export default class Controller {
     async setMercureTokenLogged() {
         Logger.debug('Controller.setMercureTokenLogged()');
 
-        EventSource.unsubscribe();
+        EventSource.unsubscribe({ resetSubscriptions: false });
 
         await this.Request.get(URL_TOKEN_EVENT).then(({ response }) => {
             this.Request.eventToken = response?.token;
@@ -100,7 +107,10 @@ export default class Controller {
     async #getSingle(param, Entity) {
         Logger.debug('Controller.#getSingle()');
 
-        this.promise = this.Request.get(`${this.url}/${param}`)
+        const queryUrl = `${this.url}/${param}`;
+        this.topicUrl = queryUrl;
+
+        this.promise = this.Request.get(queryUrl)
             .then(async ({ response, hubUrl }) => {
                 // Get custom error
                 const error = this.getError(response);
@@ -150,7 +160,10 @@ export default class Controller {
     getAll(Entity, filters = {}) {
         Logger.debug('Controller.getAll()', { Entity, filters });
 
-        this.promise = this.Request.get(this.url, filters)
+        const queryUrl = this.url;
+        this.topicUrl = queryUrl;
+
+        this.promise = this.Request.get(queryUrl, filters)
             .then(({ response, hubUrl }) => {
                 // Get custom error
                 const error = this.getError(response);
@@ -242,19 +255,38 @@ export default class Controller {
     onUpdate(callback) {
         Logger.debug('Controller.onUpdate', { callback });
 
+        this.updateKey = uuidv4();
+
         // This is not callback expected
         if (typeof callback !== 'function') {
             return this;
         }
 
-        this.#promise.then(({ hubUrl }) => {
-            if (!hubUrl) {
-                return;
-            }
-
-            EventSource.subscribe(hubUrl, callback);
+        EventSource.subscribeToTopic({
+            topic: this.topicUrl,
+            key: this.updateKey,
+            callback,
         });
 
+        if (!EventSource.isOpen) {
+            this.#promise.then(({ hubUrl }) => {
+                if (!hubUrl) {
+                    return;
+                }
+
+                EventSource.subscribe(hubUrl);
+            });
+        }
+
         return this;
+    }
+
+    /**
+     * Unsubscribe from onUpdate events
+     */
+    unsubscribe() {
+        Logger.debug('Controller.unsubscribe()');
+
+        EventSource.unsubscribeFromTopic({ key: this.updateKey });
     }
 }
