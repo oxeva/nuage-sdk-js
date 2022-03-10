@@ -240,6 +240,11 @@ export default class EventSource {
 
         if (!alreadyExists) {
             this.subscriptions.push({ topic, key, callback });
+            Logger.debug(`Added new subscription for ${topic}`);
+        } else {
+            Logger.debug(
+                `Topic subscription for ${topic} already exists with identical callback`,
+            );
         }
     }
 
@@ -254,7 +259,14 @@ export default class EventSource {
         );
 
         if (index > -1) {
+            Logger.debug(
+                `Unsubscribed from topic: ${this.subscriptions[index].topic}`,
+            );
             this.subscriptions.splice(index, 1);
+        } else {
+            Logger.debug(
+                `Failed to unsubscribe from topic subscription, updateKey: ${key} was not found`,
+            );
         }
     }
 
