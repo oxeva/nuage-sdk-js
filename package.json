@@ -26,7 +26,7 @@
   "author": "Oxeva <dev@oxeva.fr>",
   "license": "UNLICENSED",
   "devDependencies": {
-    "@amanda-mitchell/semantic-release-npm-multiple": "^2.17.0",
+    "@amanda-mitchell/semantic-release-npm-multiple": "^3.1.0",
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.16.0",
     "@babel/plugin-proposal-class-properties": "^7.16.0",
@@ -61,7 +61,8 @@
   "dependencies": {
     "@babel/runtime": "^7.16.0",
     "eventsource": "^1.1.0",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "uuid": "^8.3.2"
   },
   "peerDependencies": {
     "crypto-browserify": "^3.12.0",
