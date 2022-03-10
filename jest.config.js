@@ -3,4 +3,8 @@ module.exports = {
     coverageReporters: ['text', 'text-summary', 'cobertura'],
     setupFilesAfterEnv: ['jest-extended/all', './tests/setupTest.js'],
     testEnvironment: 'jsdom',
+    globals: {
+        window: {},
+        navigator: {},
+    },
 };
