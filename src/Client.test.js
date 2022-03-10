@@ -498,23 +498,24 @@ it('Client onUpdate()', async () => {
 
     const firstServersRef = client.servers();
 
-    firstServersRef
-        .onUpdate((error, data) => {
-            expect(error).toBeFalse();
-            expect(data).toEqual(resultEntity);
-        });
+    firstServersRef.onUpdate((error, data) => {
+        expect(error).toBeFalse();
+        expect(data).toEqual(resultEntity);
+    });
 
     const secondServersRef = client.servers();
 
-    secondServersRef
-        .onUpdate((error, data) => {
-            if (error) {
-                return;
-            }
-            expect(data).toEqual(resultEntity);
-        });
+    secondServersRef.onUpdate((error, data) => {
+        if (error) {
+            return;
+        }
+        expect(data).toEqual(resultEntity);
+    });
 
-    EventSource.onMessage({ event: { data: JSON.stringify(eventPayload) }, url: mockHubUrl });
+    EventSource.onMessage({
+        event: { data: JSON.stringify(eventPayload) },
+        url: mockHubUrl,
+    });
 
     expect(EventSource.subscriptions).toBeArrayOfSize(2);
 

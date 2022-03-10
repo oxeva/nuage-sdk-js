@@ -262,7 +262,11 @@ export default class Controller {
             return this;
         }
 
-        EventSource.subscribeToTopic({ topic: this.topicUrl, key: this.updateKey, callback });
+        EventSource.subscribeToTopic({
+            topic: this.topicUrl,
+            key: this.updateKey,
+            callback,
+        });
 
         if (!EventSource.isOpen) {
             this.#promise.then(({ hubUrl }) => {

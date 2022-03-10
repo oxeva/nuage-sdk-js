@@ -141,9 +141,7 @@ export default class Client {
     captureInvoice(filters) {
         Logger.debug('Client.captureInvoice()', { filters });
 
-        return this.#controllers
-            .use('invoice')
-            .captureInvoice(filters);
+        return this.#controllers.use('invoice').captureInvoice(filters);
     }
 
     /**

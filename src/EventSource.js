@@ -227,13 +227,15 @@ export default class EventSource {
      * Adds a new callback to be executed when we have a matching topic.
      */
     static subscribeToTopic({ topic, key, callback }) {
-        Logger.debug('EventSource.subscribeToTopic()', { topic, key, callback });
+        Logger.debug('EventSource.subscribeToTopic()', {
+            topic,
+            key,
+            callback,
+        });
 
         const alreadyExists = this.subscriptions.find(
-            (subscription) => (
-                subscription.callback.toString() === callback.toString()
-                && subscription.topic === topic
-            ),
+            (subscription) => subscription.callback.toString() === callback.toString()
+                && subscription.topic === topic,
         );
 
         if (!alreadyExists) {
@@ -247,7 +249,9 @@ export default class EventSource {
     static unsubscribeFromTopic({ key }) {
         Logger.debug('EventSource.unsubscribeFromTopic()', { key });
 
-        const index = this.subscriptions.findIndex((subscription) => subscription.key === key);
+        const index = this.subscriptions.findIndex(
+            (subscription) => subscription.key === key,
+        );
 
         if (index > -1) {
             this.subscriptions.splice(index, 1);

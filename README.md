@@ -356,7 +356,7 @@ serversRef
 
 // Unsubscribe when you no longer need to listen to events (ex: on component unmount or page change).
 
-serversRef.unsubscribe()
+serversRef.unsubscribe();
 ```
 
 ## Get an entity

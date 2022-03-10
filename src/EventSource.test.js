@@ -33,7 +33,9 @@ describe('EventSource', () => {
     it('.login()', async () => {
         const mockCallback = jest.fn((x) => x);
 
-        jest.spyOn(Request, 'get').mockImplementationOnce(() => ({ token: 'test123' }));
+        jest.spyOn(Request, 'get').mockImplementationOnce(() => ({
+            token: 'test123',
+        }));
 
         jest.spyOn(EventSource, 'unsubscribe').mockImplementationOnce(() => mockCallback());
         jest.spyOn(EventSource, 'subscribe').mockImplementationOnce(() => mockCallback());
@@ -49,9 +51,18 @@ describe('EventSource', () => {
 
         await EventSource.onOpen('https://mock.test/hub-url');
 
-        expect(window.addEventListener).toBeCalledWith('offline', expect.any(Function));
-        expect(window.addEventListener).toBeCalledWith('online', expect.any(Function));
-        expect(window.addEventListener).toBeCalledWith('beforeunload', expect.any(Function));
+        expect(window.addEventListener).toBeCalledWith(
+            'offline',
+            expect.any(Function),
+        );
+        expect(window.addEventListener).toBeCalledWith(
+            'online',
+            expect.any(Function),
+        );
+        expect(window.addEventListener).toBeCalledWith(
+            'beforeunload',
+            expect.any(Function),
+        );
     });
 
     it('.offlineListener()', async () => {
@@ -64,7 +75,10 @@ describe('EventSource', () => {
 
         await EventSource.offlineListener();
 
-        expect(window.removeEventListener).toBeCalledWith('offline', expect.any(Function));
+        expect(window.removeEventListener).toBeCalledWith(
+            'offline',
+            expect.any(Function),
+        );
 
         expect(mockCallback.mock.calls.length).toBe(1);
     });
@@ -77,7 +91,10 @@ describe('EventSource', () => {
 
         await EventSource.onlineListener('https://mock.test/hub-url');
 
-        expect(window.removeEventListener).toBeCalledWith('online', expect.any(Function));
+        expect(window.removeEventListener).toBeCalledWith(
+            'online',
+            expect.any(Function),
+        );
 
         expect(mockCallback.mock.calls.length).toBe(1);
     });
@@ -113,7 +130,11 @@ describe('EventSource', () => {
     it('.subscribeToTopic() with new topic', async () => {
         EventSource.subscriptions = []; // resets subscriptions
 
-        const newSubscription = { topic: '/scrooge/test/1', key: '123', callback: () => {} };
+        const newSubscription = {
+            topic: '/scrooge/test/1',
+            key: '123',
+            callback: () => {},
+        };
 
         await EventSource.subscribeToTopic(newSubscription);
 
@@ -123,7 +144,11 @@ describe('EventSource', () => {
     it('.subscribeToTopic() with already existing topic', async () => {
         EventSource.subscriptions = []; // resets subscriptions
 
-        const newSubscription = { topic: '/scrooge/test/2', key: '234', callback: () => {} };
+        const newSubscription = {
+            topic: '/scrooge/test/2',
+            key: '234',
+            callback: () => {},
+        };
 
         await EventSource.subscribeToTopic(newSubscription);
         await EventSource.subscribeToTopic(newSubscription);
@@ -132,7 +157,9 @@ describe('EventSource', () => {
     });
 
     it('.unsubscribeFromTopic()', async () => {
-        EventSource.subscriptions = [{ topic: '/scrooge/test/3', key: '345', callback: () => {} }];
+        EventSource.subscriptions = [
+            { topic: '/scrooge/test/3', key: '345', callback: () => {} },
+        ];
 
         await EventSource.unsubscribeFromTopic({ key: '345' });
 
@@ -143,12 +170,23 @@ describe('EventSource', () => {
         const mockCallback = jest.fn((x) => x);
 
         EventSource.subscriptions = [
-            { topic: '/rockefeller/servers', key: '456', callback: mockCallback },
-            { topic: '/rockefeller/servers/84c0d5e6-be1f-47d7-9ada-f58d5bbe812d', key: '567', callback: mockCallback },
+            {
+                topic: '/rockefeller/servers',
+                key: '456',
+                callback: mockCallback,
+            },
+            {
+                topic: '/rockefeller/servers/84c0d5e6-be1f-47d7-9ada-f58d5bbe812d',
+                key: '567',
+                callback: mockCallback,
+            },
         ];
         EventSource.isOpen = true;
 
-        await EventSource.onMessage({ event: { data: JSON.stringify(eventPayload) }, url: 'https://mock.test/hub-url' });
+        await EventSource.onMessage({
+            event: { data: JSON.stringify(eventPayload) },
+            url: 'https://mock.test/hub-url',
+        });
 
         expect(mockCallback.mock.calls.length).toBe(2);
     });
@@ -163,7 +201,10 @@ describe('EventSource', () => {
         jest.spyOn(EventSource, 'unsubscribe').mockImplementationOnce(() => mockCallback());
         jest.spyOn(EventSource, 'subscribe').mockImplementationOnce(() => mockCallback());
 
-        await EventSource.onError({ event: { status: 404 }, url: 'https://mock.test/hub-url' });
+        await EventSource.onError({
+            event: { status: 404 },
+            url: 'https://mock.test/hub-url',
+        });
 
         expect(mockCallback.mock.calls.length).toBe(2);
     });
