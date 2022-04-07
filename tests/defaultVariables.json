@@ -16,6 +16,12 @@
                 "isDefault": true
             }
         },
+        "ip": {
+            "patch": {
+                "protected": true,
+                "description": "unit-test-ip-name"
+            }
+        },
         "project": {
             "post": {
                 "description": "unit-test-sdk-js-project-description"
