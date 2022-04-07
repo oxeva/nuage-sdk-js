@@ -1,3 +1,10 @@
+# 3.1.0 (2022-04-07)
+
+
+### Features
+
+* **ips:** add floating ips (keys and flush method) 4f08e6c
+
 # 3.0.0 (2022-03-10)
 
 
