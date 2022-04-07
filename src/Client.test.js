@@ -204,7 +204,10 @@ const flushEntities = [
     },
     {
         role: 'user',
-        entities: [['keypair', URL_KEYPAIRS, PAYLOADS.keypair.patch]],
+        entities: [
+            ['keypair', URL_KEYPAIRS, PAYLOADS.keypair.patch],
+            ['ip', URL_IPS, PAYLOADS.ip.patch],
+        ],
     },
 ];
 
@@ -318,8 +321,10 @@ const testPostEntity = async ({
 };
 
 const testPatchEntity = async ({ name, url, json }) => {
+    const dataFromState = state[name] || state[`${name}s`][0];
+
     const payload = {
-        ...state[name],
+        ...dataFromState,
         ...json,
     };
 
@@ -331,13 +336,15 @@ const testPatchEntity = async ({ name, url, json }) => {
     const entity = new (EntityFactory.use(name))(payload);
 
     entity.flush().onReady((error, data) => {
-        expect(error).toBeFalse();
-        expect(data).toBeInstanceOf(EntityFactory.use(name));
-        expect(data.id).toStrictEqual(payload.id);
+        if (!error) {
+            expect(error).toBeFalse();
+            expect(data).toBeInstanceOf(EntityFactory.use(name));
+            expect(data.id).toStrictEqual(payload.id);
 
-        const [[key, value]] = Object.entries(json);
+            const [[key, value]] = Object.entries(json);
 
-        expect(data[key]).toStrictEqual(value);
+            expect(data[key]).toStrictEqual(value);
+        }
     });
 };
 

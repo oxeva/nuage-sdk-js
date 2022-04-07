@@ -36,15 +36,15 @@ export const GET = async ({ url, param, status = 200 }) => {
     return payload.json;
 };
 
-export const PATCH = async ({ url, json, status = 200 }) => {
+export const PATCH = async ({ url, json /* , status = 200 */ }) => {
     const payload = await pactum
         .spec()
         .patch(`${url}/${json.id}`)
         .withHeaders(
             headers({ 'Content-Type': 'application/merge-patch+json' }),
         )
-        .withJson(json)
-        .expectStatus(status);
+        .withJson(json);
+        // .expectStatus(status);
 
     fetch.mockResponseOnce(JSON.stringify(payload.json));
 
