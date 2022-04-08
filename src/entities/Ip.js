@@ -11,12 +11,13 @@ export default class Ip extends Entity {
         Logger.debug('Ip.constructor()', { entity });
 
         const {
-            id, project, server, addressFamily, type, address, description,
+            id, project, server, addressFamily, type, address, description, createdAt,
         } = entity;
 
         this.id = trimUrl(id);
         this.address = address;
         this.addressFamily = addressFamily;
+        this.createdAt = createdAt;
         this.project = trimUrl(project);
         this.server = trimUrl(server);
         this.type = type;
