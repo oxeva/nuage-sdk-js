@@ -1,3 +1,10 @@
+## 3.1.1 (2022-04-08)
+
+
+### Bug Fixes
+
+* **ips:** return createdAt value for an IP be682a2
+
 # 3.1.0 (2022-04-07)
 
 
