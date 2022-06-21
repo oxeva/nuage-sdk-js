@@ -1,3 +1,10 @@
+## 3.1.2 (2022-06-21)
+
+
+### Bug Fixes
+
+* **dependencies:** upgrade packages to fix vulnerabilities 26f624b
+
 ## 3.1.1 (2022-04-08)
 
 
