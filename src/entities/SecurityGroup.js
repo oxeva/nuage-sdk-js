@@ -12,12 +12,13 @@ export default class SecurityGroup extends Entity {
         Logger.debug('SecurityGroup.constructor()', { entity });
 
         const {
-            id, name, description, rules = [],
+            id, name, project, description, rules = [],
         } = entity;
 
         this.id = trimUrl(id);
         this.description = description;
         this.name = name;
+        this.project = project;
         this.rules = Array.isArray(rules)
             ? rules.map((rule) => new SecurityRule(rule))
             : [rules];
