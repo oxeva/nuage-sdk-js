@@ -1,3 +1,11 @@
+# 3.2.0 (2022-07-19)
+
+
+### Features
+
+* **security groups:** update required fields to create security groups and security rules 78ee5eb
+* **securitygroup:** add project key to SecurityGroup entity 9dd5b45
+
 ## 3.1.2 (2022-06-21)
 
 
