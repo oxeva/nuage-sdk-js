@@ -15,10 +15,10 @@ export default class SecurityGroupController extends Controller {
     post(entity = new SecurityGroup()) {
         Logger.debug('SecurityGroupController.post()', { entity });
 
-        const { name, description, rules } = entity;
+        const { description } = entity;
 
         // Required fields to create entity
-        const required = { name, description, rules };
+        const required = { description };
 
         return super.post(entity, required, SecurityGroup);
     }

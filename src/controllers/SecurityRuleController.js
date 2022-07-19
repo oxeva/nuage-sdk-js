@@ -18,22 +18,12 @@ export default class SecurityRuleController extends Controller {
         const {
             group,
             direction,
-            protocol,
-            ethertype,
-            portMin,
-            portMax,
-            remote,
         } = entity;
 
         // Required fields to create entity
         const required = {
             direction,
-            protocol,
-            ethertype,
-            portMin,
-            portMax,
-            remote,
-            group: (group ? `${URL_SECURITY_GROUPS}/` : '') + group,
+            group: group ? `${URL_SECURITY_GROUPS}/${group}` : undefined,
         };
 
         return super.post(entity, required, SecurityRule);
