@@ -5,6 +5,8 @@ import { URL_SERVERS } from '../utils/urls';
 import Entity from './Entity';
 import Ip from './Ip';
 import SecurityGroup from './SecurityGroup';
+import Image from './Image';
+import Flavor from './Flavor';
 
 export default class Server extends Entity {
     constructor(entity = {}) {
@@ -30,8 +32,8 @@ export default class Server extends Entity {
         this.id = trimUrl(id);
         this.createdAt = createdAt;
         this.description = description;
-        this.flavor = trimUrl(flavor);
-        this.image = trimUrl(image);
+        this.flavor = typeof flavor === 'string' ? trimUrl(flavor) : new Flavor(flavor);
+        this.image = typeof image === 'string' ? trimUrl(image) : new Image(image);
         this.ips = ips.map((ip) => new Ip(ip));
         this.keypair = keypair;
         this.name = name;

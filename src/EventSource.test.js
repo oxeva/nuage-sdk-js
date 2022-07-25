@@ -1,5 +1,11 @@
+// import Server from './entities/Server';
 import EventSource from './EventSource';
 import Request from './Request';
+import Flavor from './entities/Flavor';
+import Image from './entities/Image';
+import Server from './entities/Server';
+import Ip from './entities/Ip';
+import SecurityGroup from './entities/SecurityGroup';
 
 const eventPayload = {
     '@context': '/rockefeller/contexts/Server',
@@ -8,20 +14,63 @@ const eventPayload = {
     id: '84c0d5e6-be1f-47d7-9ada-f58d5bbe812d',
     name: 'instance-2022-03-09-11-06-49',
     description: 'instance-2022-03-09-11-06-49',
+    createdAt: '2022-07-25T09:49:01.798Z',
     status: 'off',
     state: 'on',
     project: '/arya/projects/17e98923-6280-4bed-854b-50e58eec993d',
-    securityGroups: [],
+    securityGroups: [new SecurityGroup({ id: '1' })],
+    ips: [new Ip({ id: '1' })],
+    keypair: 'test',
+    flavor: new Flavor({
+        name: 'unit-test-sdk-js-flavor-name',
+        ram: 1,
+        core: 1,
+        disk: 100,
+        isPublic: false,
+    }),
+    image: new Image({
+        createdAt: '2022-07-25T09:49:01.798Z',
+        updatedAt: '2022-07-25T09:49:01.798Z',
+        name: 'unit-test-sdk-js-image-name',
+        description: 'unit-test-sdk-js-image-description',
+        osAdminUser: 'unit-test-sdk-js-image-osadminuser',
+        osName: 'unit-test-sdk-js-image-osname',
+        osVersion: '1.0.0',
+        isPublic: false,
+    }),
 };
 
-const resultEntity = {
+const resultEntity = new Server({
     id: '84c0d5e6-be1f-47d7-9ada-f58d5bbe812d',
     description: 'instance-2022-03-09-11-06-49',
+    flavor: new Flavor({
+        name: 'unit-test-sdk-js-flavor-name',
+        ram: 1,
+        core: 1,
+        disk: 100,
+        isPublic: false,
+        id: undefined,
+    }),
+    image: new Image({
+        createdAt: '2022-07-25T09:49:01.798Z',
+        updatedAt: '2022-07-25T09:49:01.798Z',
+        name: 'unit-test-sdk-js-image-name',
+        description: 'unit-test-sdk-js-image-description',
+        osAdminUser: 'unit-test-sdk-js-image-osadminuser',
+        osName: 'unit-test-sdk-js-image-osname',
+        osVersion: '1.0.0',
+        isPublic: false,
+        id: undefined,
+    }),
     name: 'instance-2022-03-09-11-06-49',
     project: '17e98923-6280-4bed-854b-50e58eec993d',
+    createdAt: '2022-07-25T09:49:01.798Z',
     state: 'on',
     status: 'off',
-};
+    keypair: 'test',
+    securityGroups: [new SecurityGroup({ id: '1' })],
+    ips: [new Ip({ id: '1' })],
+});
 
 const resultTopic = '/rockefeller/servers/84c0d5e6-be1f-47d7-9ada-f58d5bbe812d';
 

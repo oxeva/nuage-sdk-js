@@ -19,8 +19,8 @@ export default class Image extends Entity {
             osVersion,
             isPublic = false,
             isDefault = false,
-            createdAt = new Date().toISOString(),
-            updatedAt = new Date().toISOString(),
+            createdAt,
+            updatedAt,
             osReleasedAt,
         } = entity;
 
