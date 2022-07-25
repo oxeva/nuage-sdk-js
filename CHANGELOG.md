@@ -1,3 +1,11 @@
+## 3.2.1 (2022-07-25)
+
+
+### Bug Fixes
+
+* **image:** remove default values for createdAt and updatedAt 30aa333
+* **server:** use server.image / server.flavor to complete a server detail a174998
+
 # 3.2.0 (2022-07-19)
 
 
