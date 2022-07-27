@@ -1,3 +1,10 @@
+## 3.2.2 (2022-07-27)
+
+
+### Bug Fixes
+
+* **server entity:** fix flavor and image properties taht returned empty entities when undefined e45f863
+
 ## 3.2.1 (2022-07-25)
 
 
