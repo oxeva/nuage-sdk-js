@@ -32,8 +32,8 @@ export default class Server extends Entity {
         this.id = trimUrl(id);
         this.createdAt = createdAt;
         this.description = description;
-        this.flavor = typeof flavor === 'string' ? trimUrl(flavor) : new Flavor(flavor);
-        this.image = typeof image === 'string' ? trimUrl(image) : new Image(image);
+        this.flavor = typeof flavor === 'object' ? new Flavor(flavor) : trimUrl(flavor);
+        this.image = typeof image === 'object' ? new Image(image) : trimUrl(image);
         this.ips = ips.map((ip) => new Ip(ip));
         this.keypair = keypair;
         this.name = name;
