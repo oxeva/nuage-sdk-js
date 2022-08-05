@@ -1,7 +1,7 @@
 import { securityRuleCustomErrors } from '../errors/entitiesError';
 import Logger from '../utils/Logger';
 import trimUrl from '../utils/trimUrl';
-import { URL_SECURITY_RULES } from '../utils/urls';
+import { URL_SECURITY_RULES, URL_SECURITY_GROUPS } from '../utils/urls';
 import Entity from './Entity';
 
 export default class SecurityRule extends Entity {
@@ -34,5 +34,27 @@ export default class SecurityRule extends Entity {
         this.url = URL_SECURITY_RULES;
         this.customErrors = securityRuleCustomErrors;
         this.original = { ...this };
+    }
+
+    flush() {
+        Logger.debug('SecurityGroup.flush()');
+
+        let options = {
+            direction: this.direction,
+            protocol: this.protocol,
+            ethertype: this.ethertype,
+            portMin: this.portMin,
+            portMax: this.portMax,
+            remote: this.remote,
+        };
+
+        if (typeof this.group === 'string') {
+            options = {
+                ...options,
+                group: `${URL_SECURITY_GROUPS}/${this.group}`,
+            };
+        }
+
+        return super.flush(options, 'patch');
     }
 }

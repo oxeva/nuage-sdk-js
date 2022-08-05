@@ -3,6 +3,7 @@ import CustomErrors from './index';
 const customErrors = {
     network: CustomErrors.NuageNetworkError,
     429: CustomErrors.NuageRateLimitError,
+    405: CustomErrors.NuageError,
     500: CustomErrors.NuageError,
 };
 

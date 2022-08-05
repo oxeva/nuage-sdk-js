@@ -28,4 +28,14 @@ export default class SecurityGroup extends Entity {
         this.customErrors = securityGroupCustomErrors;
         this.original = { ...this };
     }
+
+    flush() {
+        Logger.debug('SecurityGroup.flush()');
+
+        const options = {
+            description: this.description,
+        };
+
+        return super.flush(options, 'patch');
+    }
 }
