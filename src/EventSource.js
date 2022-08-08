@@ -12,6 +12,7 @@ import {
     URL_PROJECTS,
     URL_PROJECTS_USAGES,
     URL_SECURITY_GROUPS,
+    URL_SECURITY_RULES,
     URL_SERVERS,
     URL_TOKEN_EVENT,
     URL_USERS,
@@ -42,6 +43,7 @@ export default class EventSource {
         { url: URL_USERS, name: 'User' },
         { url: URL_IPS, name: 'Ip' },
         { url: URL_SECURITY_GROUPS, name: 'SecurityGroup' },
+        { url: URL_SECURITY_RULES, name: 'SecurityRule' },
         { url: URL_PROJECTS_USAGES, name: 'ProjectUsage' },
         { url: URL_SERVERS, name: 'Server' },
     ];
