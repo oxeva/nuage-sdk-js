@@ -1,3 +1,10 @@
+# 3.3.0 (2022-08-17)
+
+
+### Features
+
+* **eventsource:** add SecurityRule to list of entities that support Mercure Events b48bec8
+
 ## 3.2.3 (2022-08-05)
 
 
