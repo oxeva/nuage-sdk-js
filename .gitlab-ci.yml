@@ -7,6 +7,9 @@ default:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - .npm/
+  tags:
+  - kubernetes
+  - dev
 
 variables:
   GITLAB_NPM_TOKEN: ${CI_JOB_TOKEN}
