@@ -245,10 +245,15 @@ export default class Request {
             filter.append('id', id);
         }
 
-        if (order) {
-            const dir = ['asc', 'desc'].includes(direction) ? direction : 'asc';
+        const hasOrderDirection = ['asc', 'desc'].includes(direction);
 
+        if (order) {
+            const dir = hasOrderDirection ? direction : 'asc';
             filter.append(`order[${order}]`, dir);
+        }
+
+        if (direction && !hasOrderDirection) {
+            filter.append('direction', direction);
         }
 
         return decodeURIComponent(filter)
