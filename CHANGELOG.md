@@ -1,3 +1,10 @@
+## 3.3.1 (2022-08-18)
+
+
+### Bug Fixes
+
+* **request:** allow any kind of direction as a request param 1c36ed1
+
 # 3.3.0 (2022-08-17)
 
 
